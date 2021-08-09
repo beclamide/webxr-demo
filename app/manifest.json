@@ -1,0 +1,9 @@
+{
+    "name": "WebXR Demo",
+    "short_name": "WebXR Demo",
+    "start_url": ".",
+    "background_color": "#000",
+    "description": "An interactive demo showing off the power of WebXR",
+    "display": "standalone",
+    "orientation": "landscape" 
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>WebXR Demo</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+    <meta property="og:title" content="WebXR Demo">
+    <meta property="og:description" content="An interactive demo showing off the power of WebXR">
+    <meta property="og:image" content="https://user-images.githubusercontent.com/1726083/112042026-f6378900-8b3e-11eb-84a4-e4a92f86678e.jpg">
+    <meta property="og:url" content="https://webxr-demo.herokuapp.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:site_name" content="WebXR Demo">
+    <meta name="twitter:image:alt" content="An interactive demo showing off the power of WebXR">
+
+    <meta name="twitter:site" content="@beclamide">
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7HLMDE1644"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7HLMDE1644');
+    </script>
+
+    <!-- <script src="src/lib/three.min.js"></script>
+    <script src="src/lib/css3d.js"></script>
+    <script src="src/lib/astar.js"></script> -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <div class="ui">
+      <div id="frameRate"></div>
+
+      <span class="github-button">
+        <a class="github-button" href="https://github.com/sponsors/beclamide" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @beclamide on GitHub">Sponsor</a>
+        <a class="github-button" href="https://github.com/beclamide/webxr-demo" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star beclamide/gta-css on GitHub">Star</a>
+      </span>
+    </div>
+    
+    <script src="src/main.bundle.js"></script>
+  </body>
+
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "webxr-demo",
+  "version": "1.0.0",
+  "description": "A demonstration of using XR on the web ",
+  "main": "index.js",
+  "repository": "https://github.com/beclamide/webxr-demo",
+  "author": "John Bower <john@industrialassets.co.uk>",
+  "license": "MIT",
+  "engines": {
+    "node": "~14.16"
+  },
+  "dependencies": {
+    "http-server": "^0.12.3",
+    "reveal.js": "^4.1.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^8.1.1",
+    "css-loader": "^5.2.4",
+    "css-minimizer-webpack-plugin": "^2.0.0",
+    "file-loader": "^6.2.0",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^11.0.1",
+    "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^5.1.1",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.35.1",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "scripts": {
+    "build": "npx webpack --config webpack.prod.js",
+    "serve": "npx webpack serve --open --config webpack.dev.js",
+    "start": "http-server ./dist"
+  }
+}
