@@ -6,15 +6,10 @@ import { mobileAndTabletCheck } from './utils';
 class Engine {
 
   constructor() {
-    this.trackingMethod = 'artoolkit';
-
-    this.keysdown = [];
-    this.touches = [];
-
-    this.onRenderFunctions = [];
-
     this.times = [];
     this.fps;
+
+    this.markerFound;
   }
 
   init() {
@@ -52,18 +47,6 @@ class Engine {
   }
 
   addEvents() {
-    document.addEventListener('keydown', e => this.keysdown.push(e.code));
-
-    document.addEventListener('keyup', e => {
-      let index;
-      do {
-        index = this.keysdown.indexOf(e.code);
-        if (index > -1) {
-          this.keysdown.splice(index, 1);
-        }
-      } while (index > -1)
-    });
-
     window.addEventListener('resize', () => this.onResize());
     window.addEventListener('orientationchange', () => this.onResize());
   }
@@ -98,44 +81,38 @@ class Engine {
   }
 
   createARScene() {
-    const sceneRoot = new THREE.Group();
-    this.scene.add(sceneRoot);
+    this.sceneRoot = new THREE.Group();
+    this.scene.add(this.sceneRoot);
 
-    new THREEx.ArMarkerControls(this.arToolkitContext, this.camera, {
+    this.marker = new THREEx.ArMarkerControls(this.arToolkitContext, this.camera, {
       ...this.arProfile.defaultMarkerParameters,
       patternUrl: '/data/pattern-ar-marker.patt',
       changeMatrixMode: 'cameraTransformMatrix',
     });
 
+    window.addEventListener('markerFound', () => this.markerFound = true);
+    window.addEventListener('markerLost', () => this.markerFound = false);
+
     const gltfLoader = new THREE.GLTFLoader();
     gltfLoader.load('/data/head.glb', gltf => {
         gltf.scene.scale.set(.4, .4, .4);
-        sceneRoot.add(gltf.scene);
+        this.sceneRoot.add(gltf.scene);
     });
-  }
-
-  copyTouch({ identifier, pageX, pageY }) {
-    return { identifier, pageX, pageY };
-  }
-
-  ongoingTouchIndexById(idToFind) {
-    for (var i = 0; i < this.touches.length; i++) {
-      var id = this.touches[i].identifier;
-  
-      if (id == idToFind) {
-        return i;
-      }
-    }
-    return -1;
   }
 
   update() {
     // update artoolkit on every frame
-	  if (this.arToolkitSource.ready !== false ) {
+	  if (this.arToolkitSource.ready !== false) {
       this.arToolkitContext.update(this.arToolkitSource.domElement);
       this.onResize();
 
       this.sunlight.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+
+      if (this.markerFound) {
+        this.sceneRoot.visible = true;
+      } else {
+        this.sceneRoot.visible = false;
+      }
     }
   }
 
