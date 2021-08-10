@@ -7,7 +7,7 @@ Either clone the repo locally and run it (see below) or go to [https://webxr-dem
 
 Point your device at this marker:
 
-<img src="https://user-images.githubusercontent.com/1726083/128862072-49f72613-9ab6-4734-9413-27b11d698f13.png" width="600" />
+<img src="https://user-images.githubusercontent.com/1726083/128891619-794facbf-cd2e-4452-8ec0-e0e8e9252914.png" width="600" />
 
 
 ## Running locally
