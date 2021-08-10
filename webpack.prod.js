@@ -16,6 +16,7 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 // { from: 'app/images', to: 'images' },
+                { from: 'app/data', to: 'data' },
                 { from: 'app/js/lib', to: 'src/lib' },
                 { from: 'app/*.html', to: '[name].html' },
                 { from: 'app/manifest.json', to: 'manifest.json' },
