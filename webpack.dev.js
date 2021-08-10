@@ -11,7 +11,8 @@ module.exports = {
     devServer: {
         contentBase: './dist',
         host: '0.0.0.0',
-        disableHostCheck: true
+        disableHostCheck: true,
+        https: true
     },
 	output: {
 		filename: 'src/[name].bundle.js',
@@ -19,7 +20,8 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'app/images', to: 'images' },
+                // { from: 'app/images', to: 'images' },
+                { from: 'app/data', to: 'data' },
                 { from: 'app/js/lib', to: 'src/lib' },
                 { from: 'app/*.html', to: '[name].html' },
                 { from: 'app/manifest.json', to: 'manifest.json' },

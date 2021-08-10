@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "http-server": "^0.12.3",
+    "i": "^0.3.6",
+    "npm": "^7.20.5",
     "reveal.js": "^4.1.0"
   },
   "devDependencies": {
