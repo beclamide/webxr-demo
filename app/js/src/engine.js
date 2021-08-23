@@ -1,7 +1,4 @@
-// import Pedestrian from './pedestrian.js';
-// import Car from './car';
-
-import { mobileAndTabletCheck } from './utils';
+import Scenes from './scenes';
 
 class Engine {
 
@@ -14,6 +11,7 @@ class Engine {
 
   init() {
     this.scene = new THREE.Scene();
+    this.clock = new THREE.Clock();
 
     this.camera = new THREE.Camera();
     this.scene.add(this.camera);
@@ -93,11 +91,13 @@ class Engine {
     window.addEventListener('markerFound', () => this.markerFound = true);
     window.addEventListener('markerLost', () => this.markerFound = false);
 
-    const gltfLoader = new THREE.GLTFLoader();
-    gltfLoader.load('/data/head.glb', gltf => {
-        gltf.scene.scale.set(.4, .4, .4);
-        this.sceneRoot.add(gltf.scene);
-    });
+    switch (window.scene) {
+      case 2:
+        this.demoScene = new Scenes.Demo2(this);
+        break;
+      default:
+        this.demoScene = new Scenes.Demo1(this);
+    }
   }
 
   update() {
@@ -113,6 +113,8 @@ class Engine {
       } else {
         this.sceneRoot.visible = false;
       }
+      
+      this.demoScene.update();
     }
   }
 
