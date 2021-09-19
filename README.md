@@ -3,7 +3,7 @@ A demonstration of using XR on the web
 
 
 ## The Demo
-Either clone the repo locally and run it (see below) or go to [https://webxr-demo.herokuapp.com/](https://webxr-demo.herokuapp.com/) on your mobile device
+Either clone the repo locally and run it (see below) or go to [https://webxr-ia.netlify.app/](https://webxr-ia.netlify.app/) on your mobile device
 
 Point your device at this marker:
 

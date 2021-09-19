@@ -27,20 +27,57 @@
       gtag('config', 'G-7HLMDE1644');
     </script>
 
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300&display=swap');
+      body {
+        font-family: 'Roboto', sans-serif;
+      }
+
+      h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 3em;
+      }
+
+      ul {
+        max-width: 300px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .chapter {
+        list-style: none;
+        border: 1px solid black;
+        padding: 20px;
+        margin: 5px 0;
+      }
+    </style>
+
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </head>
 
   <body>
     <div id="container">
+      <h1>WebXR Demos</h1>
+
+      <p>
+        Here are a couple of demos to show how WebAR works. Feel free to clone the repo and run through the <a href="/slides.html">slides</a>. Click the Star button below to view the repo.
+      </p>
+      
       <ul>
-        <li>
-          <span><a href="/demo_01.html">Demo 1</a> - Initializing a scene</span>
+        <li class="chapter">
+          <span>
+            <a href="/demo_01.html">Demo 1</a> - Initializing a scene
+          </span>
         </li>
-        <li>
-          <span><a href="/demo_02.html">Demo 2</a> - Adding Interactivity</span>
+        <li class="chapter">
+          <span>
+            <a href="/demo_02.html">Demo 2</a> - Adding Interactivity
+          </span>
         </li>
       </ul>
     </div>
+
+    <hr />
     <span class="github-button">
       <a class="github-button" href="https://github.com/sponsors/beclamide" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @beclamide on GitHub">Sponsor</a>
       <a class="github-button" href="https://github.com/beclamide/webxr-demo" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star beclamide/gta-css on GitHub">Star</a>

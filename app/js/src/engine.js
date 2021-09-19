@@ -19,7 +19,7 @@ class Engine {
     let ambientLight = new THREE.AmbientLight( 0x333333, 0.5 );
 	  this.scene.add( ambientLight );
 
-    this.sunlight = new THREE.PointLight(0xffffff, 1, 100);
+    this.sunlight = new THREE.PointLight(0xFFFFFF, 1, 100);
     this.sunlight.position.set(5, 5, 5);
     this.scene.add(this.sunlight);
 

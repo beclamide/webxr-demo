@@ -39,6 +39,237 @@
             <h1>Experiences</h1>
           </section>
 
+           <!-- Whaaat? -->
+           <section>
+            <h1>WebXR??!</h1>
+            <ul>
+              <li>XR stands for "Mixed Reality"</li>
+              <li>Includes AR, and VR</li>
+              <li><b>AR</b> - Augments the real world with computer graphics</li>
+              <li><b>VR</b> - Allows immersive virtual worlds</li>
+              <li>WebXR is a group of standards to enable development of VR and AR experiences on the web</li>
+            </ul>
+          </section>
+
+          <!-- Whaaaaaaaaat? -->
+          <section>
+            <h1>What does WEBXR do?</h1>
+            <p>The WebXR Device API provides the following key capabilities:</p>
+
+            <ul>
+              <li>Find compatible VR or AR output devices</li>
+              <li>Render a 3D scene to the device at an appropriate frame rate</li>
+              <li>(Optionally) mirror the output to a 2D display</li>
+              <li>Create vectors representing the movements of input controls</li>
+            </ul>
+          </section>
+
+          <!-- Libraries -->
+          <section>
+            <h1>What do I need?</h1>
+            <p>The WebXR Device API provides the following key capabilities:</p>
+
+            <ul>
+              <li>THREE.js - <a href="https://threejs.org/">link</a></li>
+              <li>ARjs - <a href="https://github.com/AR-js-org">link</a></li>
+            </ul>
+          </section>
+
+          <!-- The Engine -->
+          <section>
+            <h1>The Engine</h1>
+
+            <pre><code>
+import Scenes from './scenes';
+
+class Engine {
+
+  constructor() {
+    this.times = [];
+    this.fps;
+
+    this.markerFound;
+  }
+
+  init() {
+    this.scene = new THREE.Scene();
+    this.clock = new THREE.Clock();
+
+    this.camera = new THREE.Camera();
+    this.scene.add(this.camera);
+
+    let ambientLight = new THREE.AmbientLight( 0x333333, 0.5 );
+	  this.scene.add( ambientLight );
+
+    this.sunlight = new THREE.PointLight(0xffffff, 1, 100);
+    this.sunlight.position.set(5, 5, 5);
+    this.scene.add(this.sunlight);
+
+    this.renderer = new THREE.WebGLRenderer({
+      antialias : true,
+      alpha: true
+    });
+    this.renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+    this.renderer.setSize( 640, 480 );
+    document.getElementById('container').appendChild(this.renderer.domElement);
+
+    this.addEvents();
+
+    this.createARProfile();
+
+    this.createARSource();
+
+    this.createARContext();
+
+    this.createARScene();
+
+    this.render();
+  }
+
+  addEvents() {
+    window.addEventListener('resize', () => this.onResize());
+    window.addEventListener('orientationchange', () => this.onResize());
+  }
+
+  onResize() {
+    this.arToolkitSource.onResizeElement()
+		this.arToolkitSource.copyElementSizeTo(this.renderer.domElement)
+		if ( this.arToolkitContext.arController !== null ){
+			this.arToolkitSource.copyElementSizeTo(this.arToolkitContext.arController.canvas)
+		}
+  }
+
+  createARProfile() {
+    this.arProfile = new THREEx.ArToolkitProfile();
+    this.arProfile.sourceWebcam();
+  }
+
+  createARSource() {
+    this.arToolkitSource = new THREEx.ArToolkitSource(this.arProfile.sourceParameters);
+    this.arToolkitSource.init(() => this.onResize());
+  }
+
+  createARContext() {
+    this.arToolkitContext = new THREEx.ArToolkitContext({
+      ...this.arProfile.contextParameters,
+      cameraParametersUrl: '/data/camera_para.dat',
+      detectionMode: 'mono',
+      patternRatio: .75
+    });
+
+    this.arToolkitContext.init(() => this.camera.projectionMatrix.copy( this.arToolkitContext.getProjectionMatrix() ));
+  }
+
+  createARScene() {
+    this.sceneRoot = new THREE.Group();
+    this.scene.add(this.sceneRoot);
+
+    this.marker = new THREEx.ArMarkerControls(this.arToolkitContext, this.camera, {
+      ...this.arProfile.defaultMarkerParameters,
+      patternUrl: '/data/pattern-ar-marker.patt',
+      changeMatrixMode: 'cameraTransformMatrix',
+    });
+
+    window.addEventListener('markerFound', () => this.markerFound = true);
+    window.addEventListener('markerLost', () => this.markerFound = false);
+
+    switch (window.scene) {
+      case 2:
+        this.demoScene = new Scenes.Demo2(this);
+        break;
+      default:
+        this.demoScene = new Scenes.Demo1(this);
+    }
+  }
+
+  update() {
+    // update artoolkit on every frame
+	  if (this.arToolkitSource.ready !== false) {
+      this.arToolkitContext.update(this.arToolkitSource.domElement);
+      this.onResize();
+
+      this.sunlight.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+
+      if (this.markerFound) {
+        this.sceneRoot.visible = true;
+      } else {
+        this.sceneRoot.visible = false;
+      }
+      
+      this.demoScene.update();
+    }
+  }
+
+  render() {
+    const now = performance.now();
+    while (this.times.length > 0 && this.times[0] <= now - 1000) {
+      this.times.shift();
+    }
+    this.times.push(now);
+    this.fps = this.times.length;
+    if (document.getElementById('frameRate')) document.getElementById('frameRate').innerText = `${this.fps} FPS`;
+
+    this.update();
+
+    this.renderer.render(this.scene, this.camera);
+
+    window.requestAnimationFrame(() => this.render());
+  }
+}
+
+export default Engine;
+            </code></pre>
+          </section>
+
+
+          <!-- Demo 1 -->
+          <section>
+            <h1>Demo 1</h1>
+            <p>Initializing the scene</p>
+
+            <pre>
+              <code>
+export default class Demo1 {
+  constructor(engine) {
+    // load the assets
+    
+    const gltfLoader = new THREE.GLTFLoader();
+    gltfLoader.load('/data/head.glb', gltf => {
+      gltf.scene.scale.set(.4, .4, .4);
+      engine.sceneRoot.add(gltf.scene);
+    });
+  }
+
+  update() {
+    // update the scene
+  }
+}
+              </code>
+            </pre>
+          </section>
+
+          <!-- Demo 1 Link -->
+          <section>
+            <h1>Demo 1</h1>
+            <img src="/images/slides/demo1.png" />
+          </section>
+
+          <!-- Demo Marker -->
+          <section>
+            <img src="/images/marker.png" style="max-width: 70%; max-height: 70%;" />
+          </section>
+
+          <!-- Demo 2 Link -->
+          <section>
+            <h1>Demo 2</h1>
+            <img src="/images/slides/demo2.png" />
+          </section>
+
+          <!-- Demo Marker -->
+          <section>
+            <img src="/images/marker.png" style="max-width: 70%; max-height: 70%;" />
+          </section>
+
           <!-- What Next? -->
           <section>
             <h1>What Next?</h1>
@@ -51,15 +282,15 @@
             <table style="max-width:50%">
               <tbody>
                 <tr>
-                  <td><img src="/images/slides/twitter.png" style="max-width:25%"/></td>
+                  <td><img src="/images/slides/twitter.png" style="max-width:50%"/></td>
                   <td><a href="http://www.twitter.com/beclamide">@beclamide</a></td>
                 </tr>
                 <tr>
-                  <td><img src="/images/slides/github.png" style="max-width:25%"/></td>
+                  <td><img src="/images/slides/github.png" style="max-width:50%"/></td>
                   <td><a href="http://www.github.com/beclamide">@beclamide</a></td>
                 </tr>
                 <tr>
-                  <td><img src="/images/slides/linkedin.png" style="max-width:25%"/></td>
+                  <td><img src="/images/slides/linkedin.png" style="max-width:50%"/></td>
                   <td><a href="https://www.linkedin.com/in/johnmbower/">@johnmbower</a></td>
                 </tr>
               </tbody>

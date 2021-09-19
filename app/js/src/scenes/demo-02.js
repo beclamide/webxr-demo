@@ -13,19 +13,14 @@ export default class Demo2 {
   }
 
   loadAssets() {
-    // Load the hole
-    const gltfLoader = new THREE.GLTFLoader();
-    gltfLoader.load('/data/hole.glb', gltf => {
-      const holeMesh = gltf.scene.children[2];
-      holeMesh.scale.set(.4, .4, .4);
-      this.engine.sceneRoot.add(holeMesh);
-    });
+    const cylinderGeometry = new THREE.CylinderGeometry( .2, .2, .1, 16 );
+    const cylinderMaterial = new THREE.MeshPhongMaterial( {color: 0x00000} );
+    this.cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+    this.engine.sceneRoot.add(this.cylinder);
 
-    // Load the paper
-    gltfLoader.load('/data/paper.glb', gltf => {
-      this.paperMesh = gltf.scene.children[2];
-      this.paperMesh.scale.set(.2, .2, .2);
-    });
+    const paperGeometry = new THREE.SphereGeometry( .1, 6, 6 );
+    const paperMaterial = new THREE.MeshPhongMaterial( {color: 0xFFFFFF} );
+    this.paperMesh = new THREE.Mesh( paperGeometry, paperMaterial );
   }
 
   addEvents() {
@@ -73,10 +68,12 @@ export default class Demo2 {
 
 class Paper {
   constructor(parent) {
-    this.mesh = parent.paperMesh.clone();
-    this.mesh.position.set(parent.engine.camera.position.x, parent.engine.camera.position.y, parent.engine.camera.position.z);
-    this.direction = parent.engine.camera.getWorldDirection();
-    parent.engine.sceneRoot.add(this.mesh);
+    this.parent = parent;
+    this.mesh = this.parent.paperMesh.clone();
+    this.mesh.position.set(this.parent.engine.camera.position.x, this.parent.engine.camera.position.y, this.parent.engine.camera.position.z);
+    this.direction = this.parent.engine.camera.getWorldDirection().divide(new THREE.Vector3(4, 4, 4));
+    this.gravity = 0;
+    this.parent.engine.sceneRoot.add(this.mesh);
   }
 
   destroy(engine) {
@@ -84,14 +81,39 @@ class Paper {
     engine.sceneRoot.remove(this.mesh);
   }
 
+  collision(object1, object2) {
+    object1.geometry.computeBoundingBox(); //not needed if its already calculated
+    object2.geometry.computeBoundingBox();
+    object1.updateMatrixWorld();
+    object2.updateMatrixWorld();
+    
+    var box1 = object1.geometry.boundingBox.clone();
+    box1.applyMatrix4(object1.matrixWorld);
+  
+    var box2 = object2.geometry.boundingBox.clone();
+    box2.applyMatrix4(object2.matrixWorld);
+  
+    return box1.intersectsBox(box2);
+  }
+
+  kill(engine) {
+    this.destroy(engine);
+  }
+
   update(engine) {
     if (this.dead) return;
 
     this.mesh.position.add(this.direction);
+    this.mesh.position.z += this.gravity / 50;
 
-    if (this.mesh.position.distanceTo(engine.camera.position) > 30) {
+    this.gravity = Math.min(this.gravity + .1, 3.2);
+
+    if (this.collision(this.mesh, this.parent.cylinder)) {
+      console.log('collided !!');
+      this.kill(engine);
+    } else if (this.mesh.position.distanceTo(engine.camera.position) > 30) {
       console.log('dying');
-      this.destroy(engine);
+      this.kill(engine);
     }
   }
 }
