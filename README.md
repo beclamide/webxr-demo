@@ -11,7 +11,7 @@ Point your device at this marker:
 
 
 ## Running locally
-Clone this repo and install dependencies
+Clone this repo and install dependencies. Requires Node 14.16 (or run ```nvm use```)
 ```
 $ git clone https://github.com/beclamide/webxr-demo
 $ yarn install

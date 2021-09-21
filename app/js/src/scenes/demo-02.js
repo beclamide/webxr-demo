@@ -6,6 +6,8 @@ export default class Demo2 {
     this.touchEnd;
 
     this.paper = [];
+
+    this.points = 0;
     
     this.loadAssets();
 
@@ -14,7 +16,7 @@ export default class Demo2 {
 
   loadAssets() {
     const cylinderGeometry = new THREE.CylinderGeometry( .2, .2, .1, 16 );
-    const cylinderMaterial = new THREE.MeshPhongMaterial( {color: 0x00000} );
+    const cylinderMaterial = new THREE.MeshPhongMaterial( {color: 0x00000, side: THREE.BackSide} );
     this.cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
     this.engine.sceneRoot.add(this.cylinder);
 
@@ -36,19 +38,17 @@ export default class Demo2 {
       touch: e.changedTouches[0],
       time: this.engine.clock.getElapsedTime(),
     }
-
-    console.log(this.touchStart);
   }
 
   handleEnd(e) {
     e.preventDefault();
 
+    if (!this.engine.markerFound) return;
+
     this.touchEnd = {
       touch: e.changedTouches[0],
       time: this.engine.clock.getElapsedTime(),
     }
-
-    console.log(this.touchEnd);
 
     this.paper.push(new Paper(this));
   }
@@ -57,9 +57,13 @@ export default class Demo2 {
     e.preventDefault();
   }
 
+  score() {
+    this.points += 1;
+    document.getElementById('score').innerHTML =`<h1>${this.points} points</h1>`;
+  }
+
   update() {
     // update the scene
-
     this.paper.forEach(paper => paper.update(this.engine));
   }
 }
@@ -109,10 +113,9 @@ class Paper {
     this.gravity = Math.min(this.gravity + .1, 3.2);
 
     if (this.collision(this.mesh, this.parent.cylinder)) {
-      console.log('collided !!');
+      this.parent.score();
       this.kill(engine);
     } else if (this.mesh.position.distanceTo(engine.camera.position) > 30) {
-      console.log('dying');
       this.kill(engine);
     }
   }
