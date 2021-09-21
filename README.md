@@ -1,5 +1,7 @@
-# webxr-demo
-A demonstration of using XR on the web
+# Augmented Reality in Javascript
+A demonstration of using AR on the web
+
+![webxr](https://user-images.githubusercontent.com/1726083/134234245-6de877cd-1a78-4d3b-865c-521ffe6e184e.png)
 
 
 ## The Demo
